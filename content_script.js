@@ -171,7 +171,7 @@ function startDeleteElement(doc) {
         && selected.tagName !== "rect"
         && selected.tagName !== "polygon")
             selected.parentNode.removeChild(selected);
-        
+
         e.preventDefault();
     },
     escFunc = function(e) {
@@ -325,11 +325,11 @@ function getArticleDate() {
 }
 
 function checkHeading(elem, heading, del) {
-    if(elem && elem.querySelector(heading)) {
+    if (elem && elem.querySelector(heading)) {
         // Remove it so we don't duplicate it
         var text = elem.querySelector(heading).innerText,
             element = elem.querySelector(heading);
-        if(del)
+        if (del)
             element.dataset.simpleDelete = true; // Flag it for removal later
         return text;
     } else {
@@ -339,48 +339,58 @@ function checkHeading(elem, heading, del) {
 
 function getArticleTitle() {
     // Make sure that the pageSelectedContainer isn't empty
-    if(pageSelectedContainer == null)
+    if (pageSelectedContainer == null)
         pageSelectedContainer = document.body;
 
     // Check to see if there is a h1 within pageSelectedContainer
-    var text = checkHeading(pageSelectedContainer, 'h1', true);
+    var text = checkHeading(pageSelectedContainer, 'h1', true);console.log(text);
     // Check to see if there is a h2 within pageSelectedContainer
-    if(!text)
-        text = checkHeading(pageSelectedContainer, 'h2', true);
+    if (!text)
+        text = checkHeading(pageSelectedContainer, 'h2', true);console.log(text);
     // Check to see if there is a h3 within pageSelectedContainer
-    if(!text)
-        text = checkHeading(pageSelectedContainer, 'h3', true);
+    if (!text)
+        text = checkHeading(pageSelectedContainer, 'h3', true);console.log(text);
+    // Check to see if there is a title within pageSelectedContainer
+    if (!text)
+        text = checkHeading(pageSelectedContainer, 'title', true);console.log(text);
 
     // Check to see if there's a h1 within the previous sibling of the article
-    if(!text)
-        text = checkHeading(pageSelectedContainer.previousElementSibling, 'h1');
+    if (!text)
+        text = checkHeading(pageSelectedContainer.previousElementSibling, 'h1');console.log(text);
     // Check to see if there's a h2 within the previous sibling of the article
-    if(!text)
-        text = checkHeading(pageSelectedContainer.previousElementSibling, 'h2');
+    if (!text)
+        text = checkHeading(pageSelectedContainer.previousElementSibling, 'h2');console.log(text);
     // Check to see if there's a h3 within the previous sibling of the article
-    if(!text)
-        text = checkHeading(pageSelectedContainer.previousElementSibling, 'h3');
+    if (!text)
+        text = checkHeading(pageSelectedContainer.previousElementSibling, 'h3');console.log(text);
+    // Check to see if there's a title within the previous sibling of the article
+    if (!text)
+        text = checkHeading(pageSelectedContainer.previousElementSibling, 'title');console.log(text);
 
-    if(!text) {
+    if (!text) {
         // Check to see if there's a h1 more generally
-        if(document.body.querySelector('h1'))
-            return document.body.querySelector('h1').innerText;
+        if (document.body.querySelector('h1'))
+            return document.body.querySelector('h1').innerText;console.log(text);
 
         // Check to see if there's a h2 more generally
-        if(document.body.querySelector('h2'))
-            return document.body.querySelector('h2').innerText;
+        if (document.body.querySelector('h2'))
+            return document.body.querySelector('h2').innerText;console.log(text);
 
         // Check to see if there's a h3 more generally
-        if(document.body.querySelector('h3'))
-            return document.body.querySelector('h3').innerText;
+        if (document.body.querySelector('h3'))
+            return document.body.querySelector('h3').innerText;console.log(text);
+        // Check to see if there's a title more generally
+        if (document.body.querySelector('title'))
+            return document.body.querySelector('title').innerText;console.log(text);
     } else {
+        console.log(text)
         return text;
     }
 
     // Check meta title
-    if(document.head.querySelector("title"))
+    if (document.head.querySelector("title"))
         return document.head.querySelector("title").innerText;
-    
+
     return "Unknown title";
 }
 
@@ -458,11 +468,11 @@ function closeOverlay() {
 
     // Fade out
     document.body.querySelector("#simple-article").classList.add("simple-fade-up");
-    
+
     // Reset our variables
     pageSelectedContainer = null;
     selected = null;
-    
+
     setTimeout(function() {
         // Enable scroll
         document.documentElement.classList.remove("simple-no-scroll");
@@ -477,7 +487,7 @@ function closeOverlay() {
 function getContainer() {
     var numWordsOnPage = document.body.innerText.match(/\S+/g).length,
         ps = document.body.querySelectorAll("p");
-    
+
     // Find the paragraphs with the most words in it
     var pWithMostWords = document.body,
         highestWordCount = 0;
@@ -505,8 +515,8 @@ function getContainer() {
     // Keep selecting more generally until over 2/5th of the words on the page have been selected
     var selectedContainer = pWithMostWords,
         wordCountSelected = highestWordCount;
-    
-    while(wordCountSelected / numWordsOnPage < 0.4 
+
+    while(wordCountSelected / numWordsOnPage < 0.4
     && selectedContainer != document.body
     && selectedContainer.parentNode.innerText) {
         selectedContainer = selectedContainer.parentNode;
@@ -517,7 +527,7 @@ function getContainer() {
     if(selectedContainer.tagName === "P") {
         selectedContainer = selectedContainer.parentNode;
     }
-    
+
     return selectedContainer;
 }
 
@@ -536,7 +546,7 @@ function linkListener(e) {
 
     // Don't change the top most if it's referencing an anchor in the article
     var hrefArr = this.href.split("#");
-    
+
     if(hrefArr.length < 2 // No anchor
     || (hrefArr[0].replace(/\/$/, "") != top.window.location.origin + top.window.location.pathname.replace(/\/$/, "") // Anchored to an ID on another page
         && hrefArr[0] != "about:blank"
@@ -725,7 +735,7 @@ function addGUI() {
     function checkFileName(fileName) {
         var tempName = fileName,
             count = 1;
-        
+
         while(stylesheetObj[tempName])
             tempName = fileName.replace(/(\.[\w\d_-]+)$/i, "(" + count++ + ").css");
         return tempName;
@@ -745,9 +755,9 @@ function addGUI() {
 
         stylesheetObj[theme] = CSSString;
         setStylesOfStorage();
-        
+
         saved = true;
-        
+
         closeStyleEditor();
     }
 
@@ -764,7 +774,7 @@ function addGUI() {
 
         datGUI.destroy();
         datGUI = undefined;
-        
+
         closeBtn = null;
         saved = false;
     }
@@ -772,7 +782,7 @@ function addGUI() {
     function createStyleEditor() {
         var editor = new StyleEditor();
         datGUI = new dat.GUI();
-        
+
         var fontSize = datGUI.add(editor, "fontSize", 8, 25);
         fontSize.onChange(function(value) {
             saved = false;
@@ -830,7 +840,7 @@ function addGUI() {
         // Make the strings lowercase
         selector = selector.toLowerCase();
         property = property.toLowerCase();
-        
+
         // Return it if it exists
         for(var i = 0; i < s.cssRules.length; i++) {
             var rule = s.cssRules[i];
@@ -922,7 +932,7 @@ function createSimplifiedOverlay() {
 
     // Try using the selected element's content
     pageSelectedContainer = selected;
-    
+
     // If there is no text selected, get auto-select the content
     if(!pageSelectedContainer) {
         pageSelectedContainer = getContainer();
@@ -990,7 +1000,7 @@ function createSimplifiedOverlay() {
             if((elem.nodeName === "STYLE"
             || elem.nodeName === "NOINDEX"
             || elem.getAttribute("encoding") == "application/x-tex"
-            || (elem.getAttribute("aria-hidden") == "true" 
+            || (elem.getAttribute("aria-hidden") == "true"
                && !elem.classList.contains("mwe-math-fallback-image-inline"))))
                 elem.setAttribute("data-simple-delete", true);
 
@@ -1071,7 +1081,7 @@ function createSimplifiedOverlay() {
     if(showDelModeBtn) {
         container.appendChild(addDelModeButton());
     }
-    
+
 
     // Add our listeners we need
     // The "X" button listener; exit if clicked
@@ -1132,15 +1142,15 @@ function continueLoading() {
         } else {
             style.appendChild(document.createTextNode(stylesheetObj[theme]));
         }
-        
-        
+
+
         // Create our version of the article
         createSimplifiedOverlay();
 
         // Add our required stylesheet for the article
         if(!simpleArticleIframe.head.querySelector(".required-styles"))
             addStylesheet(simpleArticleIframe, "required-styles.css", "required-styles");
-        
+
         // Change the top most page when regular links are clicked
         var linkNum = simpleArticleIframe.links.length;
         for(var i = 0; i < linkNum; i++)
@@ -1239,15 +1249,14 @@ if(document.getElementById("simple-article") == null) {
                     continueLoading();
                 });
 
-                
+
             });
 
             window.clearInterval(interval);
         }
     }, 100);
-    
+
 } else {
     if(document.querySelector(".simple-fade-up") == null) // Make sure it's been able to load
         closeOverlay();
 }
-
